@@ -1,16 +1,17 @@
-all:ordenador
+all:organizador read write
 
-ordenador:main.o read write
-	$(CC) $(CFLAGS) $(CDEBUG) main.o -o ordenador
-
+organizador:main.o list.o
+	$(CC) $(CFLAGS) $(CDEBUG) $(LDFLAGS) -o organizador main.o list.o $(LDLIBS)
 main.o:main.c
-	$(CC) $(CFLAGS) $(CDEBUG) -c main.c -o main.o
-
-read:fl-rd.c
-	$(CC) $(CFLAGS) $(CDEBUG) fl-rd.c -o read
-
-write:fl-gen.c
-	$(CC) $(CFLAGS) $(CDEBUG) fl-gen.c -o write
+list.o:list.c list.h
+read:read.c
+write:write.c
 
 clean:
-	rm -f ordenador main.o
+	rm -f main.o list.o organizador read write
+	rm -f *teste*
+
+test:
+	./write teste 1000
+	./organizador teste teste-ordenado
+	./read teste-ordenado
