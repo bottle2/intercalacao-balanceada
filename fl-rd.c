@@ -12,26 +12,29 @@ int main(int argc, char *argv[]) {
     }
 
     fp = fopen(argv[1], "r");
-    int n;
+    int n, count = 0;
 
     while (!feof(fp)) 
     {
         if(fread(&n,sizeof(int),1,fp))
         {
-            //printf("%i ",n);
-	    if (n > maior)
-	    {
-		    maior = n;
-	    }
+            count++;
+            #if 0
+            printf("%i ",n);
+            if (n > maior)
+            {
+                maior = n;
+            }
             else if (n < maior)
-	    {
+            {
                 fclose(fp);
                 printf("Não tá ordenado esse arquivo!\n");
                 return(EXIT_FAILURE);
-	    }
+            }
+            #endif
         }        
     }
-    
+    printf("%i ", count);
     printf("Arquivo ordenadíssimo\n");
     fclose(fp);
     return(EXIT_SUCCESS);
