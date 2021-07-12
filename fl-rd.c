@@ -3,6 +3,8 @@
 
 int main(int argc, char *argv[]) {
     FILE *fp;
+    int   maior = -1;
+
     if(argc != 2) 
     {
         printf("Use %s <nome_arquivo>\n", argv[0]);
@@ -16,10 +18,21 @@ int main(int argc, char *argv[]) {
     {
         if(fread(&n,sizeof(int),1,fp))
         {
-            printf("%i ",n);
+            //printf("%i ",n);
+	    if (n > maior)
+	    {
+		    maior = n;
+	    }
+            else if (n < maior)
+	    {
+                fclose(fp);
+                printf("Não tá ordenado esse arquivo!\n");
+                return(EXIT_FAILURE);
+	    }
         }        
     }
     
-    printf("\n");
+    printf("Arquivo ordenadíssimo\n");
     fclose(fp);
+    return(EXIT_SUCCESS);
 }
