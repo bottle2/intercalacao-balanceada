@@ -82,7 +82,7 @@ int main(int argc, char *argv[])
     arquivo_original = fopen(argv[1], "rb");
     int buffer[MAX_INTS] = {0};
 
-    while (fread(&buffer, sizeof(*buffer), sizeof(buffer) / sizeof(*buffer), arquivo_original))
+    while (MAX_INTS == fread(&buffer, sizeof(*buffer), sizeof(buffer) / sizeof(*buffer), arquivo_original))
     {
         if (ferror(arquivo_original))
         {
