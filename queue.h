@@ -1,6 +1,6 @@
 typedef struct FileNode FileNode;
 typedef struct FileQueue FileQueue;
-#define TAM_NOME_MAX 1000
+#define TAM_NOME_MAX 10000
 
 FileQueue *fileCreate  (void);
 void      queueDestroy (FileQueue *queue);

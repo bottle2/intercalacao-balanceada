@@ -21,7 +21,6 @@ int main(int argc, char *argv[]) {
         {
             count++;
             //#if 0
-            printf("%i ",n);
             if (n > maior)
             {
                 maior = n;
@@ -29,8 +28,6 @@ int main(int argc, char *argv[]) {
             else if (n < maior)
             {
                 fclose(fp);
-                printf("%i ", count);
-                printf("Não tá ordenado esse arquivo!\n");
                 return(EXIT_FAILURE);
             }
             //#endif

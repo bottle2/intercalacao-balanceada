@@ -23,14 +23,16 @@ static void merge_sort(FileQueue* queue){
         char fname[TAM_NOME_MAX];
         sprintf(fname, "%s %c %d", PATH_FILES,'I', getQueueNewId(queue));
 
-        FILE* aux = fopen(fname, "w+b"); 
+        FILE* aux; 
+        while (!(aux = fopen(fname, "w+b")));
         char * f1_name = NULL;
         f1_name = filePop(queue);
         char * f2_name = NULL;
         f2_name = filePop(queue);
-        FILE* f1  = fopen(f1_name, "rb");
-        FILE* f2  = fopen(f2_name, "rb");
-        printf("\nlala %s \n", f1_name);
+        FILE* f1;
+        FILE* f2;
+        while (!(f1 = fopen(f1_name, "rb")));
+        while (!(f2 = fopen(f2_name, "rb")));
 
         //mergeson
 
@@ -79,24 +81,22 @@ int main(int argc, char *argv[])
     FILE     *arquivo_original;
     FileQueue *file_queue        = fileCreate();
 
-    arquivo_original = fopen(argv[1], "rb");
+    while (!(arquivo_original = fopen(argv[1], "rb")));
     int buffer[MAX_INTS] = {0};
 
     while (MAX_INTS == fread(&buffer, sizeof(*buffer), sizeof(buffer) / sizeof(*buffer), arquivo_original) && !feof(arquivo_original))
     {
         if (ferror(arquivo_original))
         {
-            printf("ERROR :: %d\n", ferror(arquivo_original));
             clearerr(arquivo_original);
         }
         qsort(&buffer, MAX_INTS, sizeof(*buffer), cmp);
         char fname[TAM_NOME_MAX];
         sprintf(fname, "%s %c %d", PATH_FILES,'A', getQueueNewId(file_queue));
         FILE* fp = NULL;
-	    while (!(fp = fopen(fname, "w+b")))
-        {
-            printf("Dando pau: %d\n", errno);
-        }
+        
+        while (!(fp = fopen(fname, "w+b")));
+
         fwrite(&buffer, sizeof(*buffer), MAX_INTS, fp);
         fclose(fp);
         filePush(file_queue, fname);

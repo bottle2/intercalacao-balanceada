@@ -53,7 +53,6 @@ static FileNode *createNode(char* fileName)
 {
     FileNode* fn = (FileNode*) malloc(sizeof(FileNode));
     assert(fn);
-    printf("\nTAMANHO FODA DOS ANIMES: %i do arquivo %s\n", strlen(fileName), fileName);
     fn->fileName = (char*) malloc(sizeof(char)*strlen(fileName));
     strcpy(fn->fileName, fileName);
     fn->next = NULL;
