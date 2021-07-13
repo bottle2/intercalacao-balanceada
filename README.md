@@ -1,13 +1,13 @@
 # Ordenação Externa: Intercalacao Balanceada
 
-É implementado três programas: `read`, `ordenador` e `write`. Segue suas assinaturas:
+É implementado três programas: `read`, `organizador` e `write`. Segue suas assinaturas:
 
 * `write` _arquivo_ _quantidade-de-numeros_
-* `ordenador` _arquivo_ _arquivo-ordenado_
+* `organizador` _arquivo_ _arquivo-ordenado_
 * `read` _arquivo_
 
 `write` gera um arquivo com números aleatórios dentro.
-`ordenador` ordena os números de um arquivo.
+`organizador` ordena os números de um arquivo.
 `read` verifica se os números em um arquivo estão ordenados.
 
 ## Uso
