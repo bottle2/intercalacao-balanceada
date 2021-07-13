@@ -1,4 +1,6 @@
 #include <assert.h>
+#include <err.h>
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -76,19 +78,25 @@ int main(int argc, char *argv[])
     FileQueue *file_queue        = fileCreate();
 
     arquivo_original = fopen(argv[1], "rb");
+    int buffer[MAX_INTS] = {0};
 
-    while (!feof(arquivo_original))
+    while (fread(&buffer, sizeof(*buffer), sizeof(buffer) / sizeof(*buffer), arquivo_original))
     {
-        int buffer[MAX_INTS] = {0};
-        if (fread(&buffer, sizeof(*buffer), sizeof(buffer) / sizeof(*buffer), arquivo_original))
-        {        
-            qsort(&buffer, MAX_INTS, sizeof(*buffer), cmp);
-            char fname[100000];
-            sprintf(fname, "%s %c %d", PATH_FILES,'A', getQueueNewId(file_queue));
-            FILE* fp = fopen(fname, "w+b");
-            fwrite(&buffer, sizeof(*buffer), MAX_INTS, fp);
-            filePush(file_queue, fp);
+        if (ferror(arquivo_original))
+        {
+            printf("ERROR :: %d\n", ferror(arquivo_original));
+            clearerr(arquivo_original);
         }
+        qsort(&buffer, MAX_INTS, sizeof(*buffer), cmp);
+        char fname[100000];
+        sprintf(fname, "%s %c %d", PATH_FILES,'A', getQueueNewId(file_queue));
+        FILE* fp = NULL;
+	while (!(fp = fopen(fname, "w+b")))
+        {
+            printf("Dando pau: %d\n", errno);
+        }
+        fwrite(&buffer, sizeof(*buffer), MAX_INTS, fp);
+        filePush(file_queue, fp);
     }
 
     fclose(arquivo_original);

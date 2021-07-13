@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -24,6 +25,7 @@ static FileNode *createNode(FILE* file);
 FileQueue * fileCreate(void)
 {
     FileQueue *queue = malloc(sizeof(FileQueue));
+    assert(queue);
 
     queue->first   = NULL;
     queue->last    = NULL;
@@ -50,6 +52,7 @@ void queueDestroy(FileQueue *queue)
 static FileNode *createNode(FILE * file)
 {
     FileNode* fn = (FileNode*) malloc(sizeof(FileNode));
+    assert(fn);
     fn->run = file;
     fn->next = NULL;
     return fn;
