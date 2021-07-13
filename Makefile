@@ -18,9 +18,11 @@ clean:
 	rm -f *teste*
 
 test:
-	./write teste 50000000
-	./organizador teste teste-ordenado
-	./read teste-ordenado
+	./write arq 40000000
+	./organizador arq arq-ordenado
+	./read arq-ordenado
 
 check:
 	cppcheck --enable=all --suppress=missingIncludeSystem main.c queue.c
+	cppcheck --enable=all --suppress=missingIncludeSystem write.c
+	cppcheck --enable=all --suppress=missingIncludeSystem read.c
