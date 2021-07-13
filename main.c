@@ -4,6 +4,7 @@
 #include <stdlib.h>
 
 #include "queue.h"
+#include "try.h"
 
 #define MAX_INTS 10000
 #define PATH_FILES "./files/"
@@ -31,7 +32,6 @@ int main(int argc, char *argv[])
         rename(f_name, argv[2]);
     }
 
-
     queueDestroy(file_queue);
 
     return (EXIT_SUCCESS);
@@ -57,7 +57,7 @@ static FileQueue * run_queue(char filename[])
         }
         qsort(&buffer, MAX_INTS, sizeof(*buffer), cmp);
         char fname[TAM_NOME_MAX];
-        sprintf(fname, "%s %c %d", PATH_FILES,'A', getQueueNewId(file_queue));
+        sprintf(fname, "%s%c %d", PATH_FILES,'A', getQueueNewId(file_queue));
         FILE* fp = NULL;
         
         while (!(fp = fopen(fname, "w+b")));
@@ -76,20 +76,18 @@ static void merge_sort(FileQueue* queue){
     
     while(getQueueSize(queue) > 1)
     {
+        FILE* f1  = NULL;
+        FILE* f2  = NULL;
+        FILE* aux = NULL; 
 
+        char * f1_name = filePop(queue);
+        char * f2_name = filePop(queue);
         char fname[TAM_NOME_MAX];
-        sprintf(fname, "%s %c %d", PATH_FILES,'I', getQueueNewId(queue));
+        sprintf(fname, "%s%c %d", PATH_FILES,'I', getQueueNewId(queue));
 
-        FILE* aux; 
-        while (!(aux = fopen(fname, "w+b")));
-        char * f1_name = NULL;
-        f1_name = filePop(queue);
-        char * f2_name = NULL;
-        f2_name = filePop(queue);
-        FILE* f1;
-        FILE* f2;
         while (!(f1 = fopen(f1_name, "rb")));
         while (!(f2 = fopen(f2_name, "rb")));
+        while (!(aux = fopen(fname, "w+b")));
 
         //mergeson
 

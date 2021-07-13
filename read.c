@@ -19,6 +19,7 @@ int main(int argc, char *argv[]) {
     {
         if(fread(&n,sizeof(int),1,fp))
         {
+            printf("%d ", n);
             count++;
             //#if 0
             if (n > maior)
@@ -28,12 +29,14 @@ int main(int argc, char *argv[]) {
             else if (n < maior)
             {
                 fclose(fp);
+                printf("\nLidos %i números.\n", count);
+                printf("Arquivo não está em ordem!\n");
                 return(EXIT_FAILURE);
             }
             //#endif
         }        
     }
-    printf("%i ", count);
+    printf("\nLidos %i números.\n", count);
     printf("Arquivo ordenadíssimo\n");
     fclose(fp);
     return(EXIT_SUCCESS);

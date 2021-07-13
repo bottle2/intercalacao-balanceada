@@ -17,13 +17,14 @@ int main(int argc, char *argv[]) {
     int n, max = atoi(argv[2]);
     assert(max != 0);
 
-    printf("\n %d", max);
     for (int i=0;i<max;i++)
     {
         n = rand() % max + 1;
         fwrite(&n, sizeof(int), 1, fp);
         //printf("%i ", n);
     }
+
+    printf("Gerados %d números\n", max);
 
     fclose(fp);
 }
