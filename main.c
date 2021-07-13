@@ -5,14 +5,71 @@
 
 #include "queue.h"
 
-#define MAX_INTS 5
+#define MAX_INTS 10000
 #define PATH_FILES "./files/"
 
-static int cmp(const void* a, const void* b);
-static void merge_sort(FileQueue* queue);
+static int         cmp(const void* a, const void* b);
+static FileQueue * run_queue (char filename[]);
+static void        merge_sort(FileQueue* queue);
+
+int main(int argc, char *argv[])
+{
+    if(argc != 3) 
+    {
+        printf("Use %s <arquivo_original> <arquivo_ordenado>\n", argv[0]);
+        exit(EXIT_FAILURE);
+    }
+
+    FileQueue * file_queue = run_queue(argv[1]);
+
+    if(getQueueSize(file_queue) != 0)
+    {
+        merge_sort(file_queue);
+
+        char * f_name = NULL;
+        f_name = filePop(file_queue);
+        rename(f_name, argv[2]);
+    }
+
+
+    queueDestroy(file_queue);
+
+    return (EXIT_SUCCESS);
+}
 
 static int cmp(const void* a, const void* b){
     return( *((int*)a) - *((int*)b) );
+}
+
+static FileQueue * run_queue(char filename[])
+{
+    FILE     *arquivo_original;
+    FileQueue *file_queue        = fileCreate();
+
+    while (!(arquivo_original = fopen(filename, "rb")));
+    int buffer[MAX_INTS] = {0};
+
+    while (MAX_INTS == fread(&buffer, sizeof(*buffer), sizeof(buffer) / sizeof(*buffer), arquivo_original) && !feof(arquivo_original))
+    {
+        if (ferror(arquivo_original))
+        {
+            clearerr(arquivo_original);
+        }
+        qsort(&buffer, MAX_INTS, sizeof(*buffer), cmp);
+        char fname[TAM_NOME_MAX];
+        sprintf(fname, "%s %c %d", PATH_FILES,'A', getQueueNewId(file_queue));
+        FILE* fp = NULL;
+        
+        while (!(fp = fopen(fname, "w+b")));
+
+        fwrite(&buffer, sizeof(*buffer), MAX_INTS, fp);
+        fclose(fp);
+        filePush(file_queue, fname);
+    }
+
+    fclose(arquivo_original);
+
+    return file_queue;
 }
 
 static void merge_sort(FileQueue* queue){
@@ -68,53 +125,4 @@ static void merge_sort(FileQueue* queue){
         //DELETAR ARQUIVOS
         filePush(queue, fname);
     }    
-}
-
-int main(int argc, char *argv[])
-{
-    if(argc != 3) 
-    {
-        printf("Use %s <arquivo_original> <arquivo_ordenado>\n", argv[0]);
-        exit(EXIT_FAILURE);
-    }
-
-    FILE     *arquivo_original;
-    FileQueue *file_queue        = fileCreate();
-
-    while (!(arquivo_original = fopen(argv[1], "rb")));
-    int buffer[MAX_INTS] = {0};
-
-    while (MAX_INTS == fread(&buffer, sizeof(*buffer), sizeof(buffer) / sizeof(*buffer), arquivo_original) && !feof(arquivo_original))
-    {
-        if (ferror(arquivo_original))
-        {
-            clearerr(arquivo_original);
-        }
-        qsort(&buffer, MAX_INTS, sizeof(*buffer), cmp);
-        char fname[TAM_NOME_MAX];
-        sprintf(fname, "%s %c %d", PATH_FILES,'A', getQueueNewId(file_queue));
-        FILE* fp = NULL;
-        
-        while (!(fp = fopen(fname, "w+b")));
-
-        fwrite(&buffer, sizeof(*buffer), MAX_INTS, fp);
-        fclose(fp);
-        filePush(file_queue, fname);
-    }
-
-    fclose(arquivo_original);
-
-    if(getQueueSize(file_queue) != 0)
-    {
-        merge_sort(file_queue);
-
-        char * f_name = NULL;
-        f_name = filePop(file_queue);
-        rename(f_name, argv[2]);
-    }
-
-
-    queueDestroy(file_queue);
-
-    return (EXIT_SUCCESS);
 }
