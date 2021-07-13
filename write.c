@@ -12,18 +12,18 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
 
-    fp = fopen(argv[1], "w+");
+    fp = fopen(argv[1], "wb");
     srand(time(NULL));
     int n, max = atoi(argv[2]);
     assert(max != 0);
 
-    for (int i=0;i<atoi(argv[2]);i++)
+    printf("\n %d", max);
+    for (int i=0;i<max;i++)
     {
         n = rand() % max + 1;
         fwrite(&n, sizeof(int), 1, fp);
         //printf("%i ", n);
     }
 
-    printf("\n");
     fclose(fp);
 }

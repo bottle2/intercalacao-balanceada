@@ -1,9 +1,10 @@
 #include <stdio.h>
+#include <limits.h>
 #include <stdlib.h>
 
 int main(int argc, char *argv[]) {
     FILE *fp;
-    int   maior = -1;
+    int   maior = INT_MIN;
 
     if(argc != 2) 
     {

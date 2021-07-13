@@ -18,7 +18,7 @@ clean:
 	rm -f *teste*
 
 test:
-	./write teste 10000
+	./write teste 1000000000
 	./organizador teste teste-ordenado
 	./read teste-ordenado
 
