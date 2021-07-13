@@ -1,12 +1,60 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "list.h"
+#include "queue.h"
 
 #define MAX_INTS 5
+#define PATH_FILES "./files/"
 
-static int cmp(void* a, void* b){
+static int cmp(const void* a, const void* b);
+static void merge_sort(FileQueue* queue);
+
+static int cmp(const void* a, const void* b){
     return( *((int*)a) - *((int*)b) );
+}
+
+static void merge_sort(FileQueue* queue){
+    
+    while(getQueueSize(queue) > 1)
+    {
+        FILE* f1 = filePop(queue);
+        FILE* f2 = filePop(queue);
+        FILE* ctr = NULL;
+        rewind(f1);rewind(f2);
+        char fname[100];
+        sprintf(fname, "%s %c %d", PATH_FILES,'I', getQueueNewId(queue));
+        FILE* aux = fopen(fname, "w+b"); 
+        //mergeson
+        
+        int e1 = 0; 
+        int e2 = 0;
+        int* ex = NULL;
+        while(fread(&e1, sizeof(e1), 1, f1) != 0 && fread(&e2, sizeof(e2), 1, f2) != 0)
+        {
+            if(e1 > e2)
+            {
+                ex = &e2;
+            }
+            else
+            {
+                ex = &e1;
+            }
+            fwrite(ex, sizeof(int), 1, aux);
+            printf("%i %i %i\n", e1, e2 , *ex);
+        }
+        if(!feof(f1)) ctr = f1;else ctr = f2;
+
+        int e = 0; 
+        while(fread(&e, sizeof(e), 1, ctr) != 0)
+        {
+            fwrite(&e, sizeof(int), 1, aux);
+        }
+        
+        fclose(f1);
+        fclose(f2);
+        //DELETAR ARQUIVOS
+        filePush(queue, aux);
+    }    
 }
 
 int main(int argc, char *argv[])
@@ -18,27 +66,32 @@ int main(int argc, char *argv[])
     }
 
     FILE     *arquivo_original;
-    FileList *file_list        = fileCreate();
+    FileQueue *file_queue        = fileCreate();
 
-    arquivo_original = fopen(argv[1], "r");
+    arquivo_original = fopen(argv[1], "rb");
 
     for (int run_i = 0; !feof(arquivo_original); run_i++)
     {
         int buffer[MAX_INTS] = {};
         if (fread(&buffer, sizeof(*buffer), sizeof(buffer) / sizeof(*buffer), arquivo_original))
         {        
-            //qsort(&buffer, MAX_INTS, sizeof(*buffer), cmp);
+            qsort(&buffer, MAX_INTS, sizeof(*buffer), (*cmp));
             char fname[100];
-            sprintf(fname, "%c %d", 'A', run_i);
-            FILE* fp = fopen(fname, "w");
+            sprintf(fname, "%s %c %d", PATH_FILES,'A', run_i);
+            FILE* fp = fopen(fname, "w+b");
             fwrite(&buffer, sizeof(*buffer), MAX_INTS, fp);
-            fclose(fp);
+            filePush(file_queue, fp);
         }
     }
 
     fclose(arquivo_original);
 
-    fileDestroy(file_list);
+    if(getQueueSize(file_queue) != 0)
+    {
+        merge_sort(file_queue);
+    }
+
+    queueDestroy(file_queue);
 
     return (EXIT_SUCCESS);
 }
