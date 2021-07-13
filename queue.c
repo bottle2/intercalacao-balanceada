@@ -1,13 +1,14 @@
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "queue.h"
 
 struct FileNode
 {
-    struct FileNode *next;
-    FILE            *run;
+    struct FileNode    *next;
+    char               *fileName;
 };
 
 struct FileQueue
@@ -20,7 +21,7 @@ struct FileQueue
 };
 
 static void freeNode(FileNode* node);
-static FileNode *createNode(FILE* file);
+static FileNode *createNode(char* file);
 
 FileQueue * fileCreate(void)
 {
@@ -42,36 +43,38 @@ void queueDestroy(FileQueue *queue)
     FileNode* f = queue->first;
     while(f != NULL){
         aux = f->next;
-        fclose(f->run);
         freeNode(f);
         f = aux;
     }
     free(queue);
 }
 
-static FileNode *createNode(FILE * file)
+static FileNode *createNode(char* fileName)
 {
     FileNode* fn = (FileNode*) malloc(sizeof(FileNode));
     assert(fn);
-    fn->run = file;
+    printf("\nTAMANHO FODA DOS ANIMES: %i do arquivo %s\n", strlen(fileName), fileName);
+    fn->fileName = (char*) malloc(sizeof(char)*strlen(fileName));
+    strcpy(fn->fileName, fileName);
     fn->next = NULL;
     return fn;
 }
 
-FILE* filePop(FileQueue *queue)
+char* filePop(FileQueue *queue)
 {
     if(queue->first == NULL) return NULL;
     if(queue->first == queue->last)queue->last = NULL;
 
     FileNode* aux = queue->first;
-    FILE* fl = aux->run;
+    char * str = aux->fileName;
+    aux->fileName = NULL;
     queue->first = queue->first->next;
     queue->size -= 1;
     freeNode(aux);
-    return fl;
+    return str;//twice
 }
 
-void filePush(FileQueue *queue, FILE * file)
+void filePush(FileQueue *queue, char* file)
 {
     FileNode* fn = createNode(file);
     if(queue->last == NULL)

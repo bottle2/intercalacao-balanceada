@@ -1,5 +1,4 @@
 #include <assert.h>
-#include <err.h>
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -20,16 +19,18 @@ static void merge_sort(FileQueue* queue){
     
     while(getQueueSize(queue) > 1)
     {
-        printf("lala");
 
-        char fname[10000];
+        char fname[TAM_NOME_MAX];
         sprintf(fname, "%s %c %d", PATH_FILES,'I', getQueueNewId(queue));
 
         FILE* aux = fopen(fname, "w+b"); 
-        FILE* f1  = filePop(queue);
-        FILE* f2  = filePop(queue);
-
-        rewind(f1); rewind(f2);
+        char * f1_name = NULL;
+        f1_name = filePop(queue);
+        char * f2_name = NULL;
+        f2_name = filePop(queue);
+        FILE* f1  = fopen(f1_name, "rb");
+        FILE* f2  = fopen(f2_name, "rb");
+        printf("\nlala %s \n", f1_name);
 
         //mergeson
 
@@ -61,8 +62,9 @@ static void merge_sort(FileQueue* queue){
         
         fclose(f1);
         fclose(f2);
+        fclose(aux);
         //DELETAR ARQUIVOS
-        filePush(queue, aux);
+        filePush(queue, fname);
     }    
 }
 
@@ -88,15 +90,16 @@ int main(int argc, char *argv[])
             clearerr(arquivo_original);
         }
         qsort(&buffer, MAX_INTS, sizeof(*buffer), cmp);
-        char fname[100000];
+        char fname[TAM_NOME_MAX];
         sprintf(fname, "%s %c %d", PATH_FILES,'A', getQueueNewId(file_queue));
         FILE* fp = NULL;
-	while (!(fp = fopen(fname, "w+b")))
+	    while (!(fp = fopen(fname, "w+b")))
         {
             printf("Dando pau: %d\n", errno);
         }
         fwrite(&buffer, sizeof(*buffer), MAX_INTS, fp);
-        filePush(file_queue, fp);
+        fclose(fp);
+        filePush(file_queue, fname);
     }
 
     fclose(arquivo_original);
@@ -105,23 +108,9 @@ int main(int argc, char *argv[])
     {
         merge_sort(file_queue);
 
-        FILE *arquivo_ordenado  = filePop(file_queue);
-        rewind(arquivo_ordenado);
-        assert(arquivo_ordenado != NULL);
-        FILE *arquivo_ordenado_final = fopen(argv[2], "wb");
-
-        while (!feof(arquivo_ordenado))
-        {
-            int buffer[MAX_INTS] = {0};
-            if (fread(&buffer, sizeof(*buffer), sizeof(buffer) / sizeof(*buffer), arquivo_ordenado))
-            {
-                    fwrite(&buffer, sizeof(*buffer), MAX_INTS, arquivo_ordenado_final);
-            }
-            printf("banana\n");
-        }
-
-        fclose(arquivo_ordenado);
-        fclose(arquivo_ordenado_final);
+        char * f_name = NULL;
+        f_name = filePop(file_queue);
+        rename(f_name, argv[2]);
     }
 
 
