@@ -50,3 +50,7 @@ $ CFLAGS="-O2 -march=native -flto" make clean all
 ```
 
 Não há receita para instalação.
+
+## Autores
+
+Feito por Bento Borges Schirmer e Thiago Rodrigues Silva.
