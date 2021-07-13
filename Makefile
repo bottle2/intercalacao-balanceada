@@ -1,3 +1,4 @@
+CC = GCC 
 all:organizador read write
 
 organizador:main.o list.o

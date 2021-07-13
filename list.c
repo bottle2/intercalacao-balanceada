@@ -13,32 +13,59 @@ struct FileList
 {
     FileNode *first;
     FileNode *last;
-    FileNode *atual;
-    int       tamanho;
+    FileNode *smallest;
+    int       size;
 };
 
+static FileNode *createNode(FILE* file);
 
-FileList * FileCreate(void)
+FileList * fileCreate(void)
 {
     FileList *list = malloc(sizeof(FileList));
 
     list->first   = NULL;
     list->last    = NULL;
-    list->atual   = NULL;
-    list->tamanho = 0;
+    list->smallest= NULL;
+    list->size = 0;
 
     return (list);
 }
 
-void FileDestroy(FileList *list)
+void fileDestroy(FileList *list)
 {
     free(list);
 }
 
-FileNode *FileFirst(FileList *list)
+static FileNode *createNode(FILE * file)
 {
+    FileNode* fn = (FileNode*) malloc(sizeof(FileNode));
+    fn->run = file;
+    fn->next = NULL;
+    return fn;
 }
 
-FileNode *FilePush(FileList *list)
+FileNode *fileSmallest(FileList *list)
 {
+
+}
+
+FileNode *updateSmallest(FileList *list)
+{
+    
+}
+
+FileNode *filePush(FileList *list, FILE * file)
+{
+    FileNode* fn = createNode(file);
+    if(list->last == NULL)
+    {
+        list->first = fn;
+        list->last = fn;
+    }
+    else
+    {
+        list->last->next = fn;
+        list->last = fn;
+    }
+    list->size += 1;
 }

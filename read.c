@@ -19,7 +19,7 @@ int main(int argc, char *argv[]) {
         if(fread(&n,sizeof(int),1,fp))
         {
             count++;
-            #if 0
+            //#if 0
             printf("%i ",n);
             if (n > maior)
             {
@@ -31,7 +31,7 @@ int main(int argc, char *argv[]) {
                 printf("Não tá ordenado esse arquivo!\n");
                 return(EXIT_FAILURE);
             }
-            #endif
+            //#endif
         }        
     }
     printf("%i ", count);
