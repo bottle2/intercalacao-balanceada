@@ -5,7 +5,7 @@
 
 #define MAX_INTS 5
 
-static int cmp(void* a, void* b){
+static int cmp(const void* a, const void* b){
     return( *((int*)a) - *((int*)b) );
 }
 
@@ -27,9 +27,9 @@ int main(int argc, char *argv[])
         int buffer[MAX_INTS] = {};
         if (fread(&buffer, sizeof(*buffer), sizeof(buffer) / sizeof(*buffer), arquivo_original))
         {        
-            //qsort(&buffer, MAX_INTS, sizeof(*buffer), cmp);
-            char fname[100];
-            sprintf(fname, "%c %d", 'A', run_i);
+            qsort(&buffer, MAX_INTS, sizeof(*buffer), cmp);
+            char fname[255]; // Comprimento máximo do nome dum arquivo no Windows.
+            sprintf(fname, "%s%d", argv[1], run_i);
             FILE* fp = fopen(fname, "w");
             fwrite(&buffer, sizeof(*buffer), MAX_INTS, fp);
             fclose(fp);
