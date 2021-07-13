@@ -28,6 +28,7 @@ int main(int argc, char *argv[]) {
             else if (n < maior)
             {
                 fclose(fp);
+                printf("%i ", count);
                 printf("Não tá ordenado esse arquivo!\n");
                 return(EXIT_FAILURE);
             }

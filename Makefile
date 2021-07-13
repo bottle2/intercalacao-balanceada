@@ -20,7 +20,7 @@ clean:
 test:
 	./write teste 1000
 	./organizador teste teste-ordenado
-	./read files/' I 198'
+	./read teste-ordenado
 
 check:
 	cppcheck --enable=all --suppress=missingIncludeSystem main.c queue.c

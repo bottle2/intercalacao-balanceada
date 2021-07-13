@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -14,6 +15,7 @@ int main(int argc, char *argv[]) {
     fp = fopen(argv[1], "w+");
     srand(time(NULL));
     int n, max = atoi(argv[2]);
+    assert(max != 0);
 
     for (int i=0;i<atoi(argv[2]);i++)
     {
