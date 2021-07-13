@@ -1,6 +1,10 @@
-CC = GCC 
+CC = gcc 
 CFLAGS=-Wpedantic -Wall -Wextra
 all:organizador read write
+
+.SUFFIXES:.c .o
+.c.o:
+	$(CC) $(CFLAGS) $(CDEBUG) -c $<
 
 organizador:main.o queue.o
 	$(CC) $(CFLAGS) $(CDEBUG) $(LDFLAGS) -o organizador main.o queue.o $(LDLIBS)
@@ -16,4 +20,7 @@ clean:
 test:
 	./write teste 1000
 	./organizador teste teste-ordenado
-	./read teste-ordenado
+	./read files/' I 198'
+
+check:
+	cppcheck --enable=all --suppress=missingIncludeSystem main.c queue.c

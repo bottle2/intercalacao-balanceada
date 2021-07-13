@@ -17,6 +17,7 @@ static void merge_sort(FileQueue* queue){
     
     while(getQueueSize(queue) > 1)
     {
+        printf("lala");
         FILE* f1 = filePop(queue);
         FILE* f2 = filePop(queue);
         FILE* ctr = NULL;
@@ -34,10 +35,12 @@ static void merge_sort(FileQueue* queue){
             if(e1 > e2)
             {
                 ex = &e2;
+                fseek(f1,-4,SEEK_CUR);
             }
             else
             {
                 ex = &e1;
+                fseek(f2,-4,SEEK_CUR);
             }
             fwrite(ex, sizeof(int), 1, aux);
             printf("%i %i %i\n", e1, e2 , *ex);
@@ -47,6 +50,7 @@ static void merge_sort(FileQueue* queue){
         int e = 0; 
         while(fread(&e, sizeof(e), 1, ctr) != 0)
         {
+            printf("lele");
             fwrite(&e, sizeof(int), 1, aux);
         }
         
@@ -72,10 +76,10 @@ int main(int argc, char *argv[])
 
     for (int run_i = 0; !feof(arquivo_original); run_i++)
     {
-        int buffer[MAX_INTS] = {};
+        int buffer[MAX_INTS] = {0};
         if (fread(&buffer, sizeof(*buffer), sizeof(buffer) / sizeof(*buffer), arquivo_original))
         {        
-            qsort(&buffer, MAX_INTS, sizeof(*buffer), (*cmp));
+            qsort(&buffer, MAX_INTS, sizeof(*buffer), cmp);
             char fname[100];
             sprintf(fname, "%s %c %d", PATH_FILES,'A', run_i);
             FILE* fp = fopen(fname, "w+b");

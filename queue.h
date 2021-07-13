@@ -3,7 +3,7 @@ typedef struct FileQueue FileQueue;
 
 FileQueue *fileCreate  (void);
 void      queueDestroy (FileQueue *queue);
-FileNode *filePush    (FileQueue *queue, FILE * file);
+void      filePush    (FileQueue *queue, FILE * file);
 FileNode *fileNext    (FileQueue *queue);
 FileNode *fileUpdate  (FileQueue *queue);
 FileNode *fileReset   (FileQueue *queue);

@@ -36,10 +36,9 @@ FileQueue * fileCreate(void)
 
 void queueDestroy(FileQueue *queue)
 {
-    int count;
     FileNode* aux = NULL;
     FileNode* f = queue->first;
-    while(f->run != NULL){
+    while(f != NULL){
         aux = f->next;
         fclose(f->run);
         freeNode(f);
@@ -56,16 +55,6 @@ static FileNode *createNode(FILE * file)
     return fn;
 }
 
-FileNode *fileSmallest(FileQueue *queue)
-{
-
-}
-
-FileNode *updateSmallest(FileQueue *queue)
-{
-    
-}
-
 FILE* filePop(FileQueue *queue)
 {
     if(queue->first == NULL) return NULL;
@@ -79,7 +68,7 @@ FILE* filePop(FileQueue *queue)
     return fl;
 }
 
-FileNode *filePush(FileQueue *queue, FILE * file)
+void filePush(FileQueue *queue, FILE * file)
 {
     FileNode* fn = createNode(file);
     if(queue->last == NULL)
