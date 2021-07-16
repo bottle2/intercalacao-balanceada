@@ -2,11 +2,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "config.h"
+#include "merge.h"
 #include "queue.h"
 #include "try.h"
 
 #define MAX_INTS 10000
-#define PATH_FILES "./files/"
 
 static int         cmp(const void* a, const void* b);
 static FileQueue * run_queue (char filename[]);
@@ -24,7 +25,11 @@ int main(int argc, char *argv[])
 
     if(getQueueSize(file_queue) != 0)
     {
+#if 0
         merge_sort(file_queue);
+#else
+        merge_queue(file_queue);
+#endif
 
         char * f_name = NULL;
         f_name = filePop(file_queue);
@@ -73,6 +78,7 @@ static FileQueue * run_queue(char filename[])
     return file_queue;
 }
 
+#if 0
 static void merge_sort(FileQueue* queue){
     
     while(getQueueSize(queue) > 1)
@@ -128,3 +134,4 @@ static void merge_sort(FileQueue* queue){
         filePush(queue, fname);
     }    
 }
+#endif

@@ -6,11 +6,14 @@ all:organizador read write
 .c.o:
 	$(CC) $(CFLAGS) $(CDEBUG) -c $<
 
-organizador:main.o queue.o try.o
-	$(CC) $(CFLAGS) $(CDEBUG) $(LDFLAGS) -o organizador main.o queue.o try.o $(LDLIBS)
-main.o:main.c try.h
+organizador:main.o merge.o queue.o try.o
+	$(CC) $(CFLAGS) $(CDEBUG) $(LDFLAGS) \
+		-o organizador main.o merge.o queue.o try.o \
+		$(LDLIBS)
+main.o:main.c try.h config.h
+merge.o:merge.c merge.h queue.h config.h
 queue.o:queue.c queue.h
-try.o:try.c try.h
+try.o:try.c try.h config.h
 read:read.c
 write:write.c
 
