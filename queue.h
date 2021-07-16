@@ -1,3 +1,6 @@
+#ifndef QUEUE_H
+#define QUEUE_H
+
 typedef struct FileNode FileNode;
 typedef struct FileQueue FileQueue;
 #define TAM_NOME_MAX 10000
@@ -14,3 +17,5 @@ char* filePop(FileQueue *queue);
 
 int getQueueSize(FileQueue *queue);
 int getQueueNewId(FileQueue *queue);
+
+#endif /* QUEUE_H */

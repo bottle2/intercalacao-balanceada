@@ -13,7 +13,7 @@ FILE * _try_open(char path[], char mode[], char source[], int line, char const f
     for (try_i = 0; !(file = fopen(path, mode)) && try_i < MAX_TRIES; try_i++)
     {
         fprintf(stderr
-                , "fopen(\"%s\", \"%s\") set errno to %d at line %d of %s in %s, attempt #%d."
+                , "fopen(\"%s\", \"%s\") set errno to %d at line %d of %s in %s(), attempt #%d.\n"
                 , path, mode, errno, line, source, function, try_i + 1);
     }
 
