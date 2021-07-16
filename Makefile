@@ -23,7 +23,7 @@ clean:
 	rm -f *teste*
 
 test:
-	./write arq 4000000
+	./write arq 7421141
 	./organizador arq arq-ordenado
 	./read arq-ordenado
 

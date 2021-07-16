@@ -36,28 +36,29 @@ int main(int argc, char *argv[])
 
 static FileQueue * run_queue(char filename[])
 {
-    FILE     *arquivo_original;
-    FileQueue *file_queue        = fileCreate();
+    FILE      *arquivo_original = TRY_OPEN(filename, "rb");
+    FileQueue *file_queue       = fileCreate();
+    int        buffer[MAX_INTS] = {0};
+    int        read_number      = 0;
 
-    arquivo_original = TRY_OPEN(filename, "rb");
-    int buffer[MAX_INTS] = {0};
-
-    while (MAX_INTS == fread(&buffer, sizeof(*buffer), sizeof(buffer) / sizeof(*buffer), arquivo_original) && !feof(arquivo_original))
+    while (!feof(arquivo_original)
+            && (read_number = fread(&buffer, sizeof(*buffer), sizeof(buffer) / sizeof(*buffer), arquivo_original))
+            && !ferror(arquivo_original))
     {
-        if (ferror(arquivo_original))
-        {
-            clearerr(arquivo_original);
-        }
-        qsort(&buffer, MAX_INTS, sizeof(*buffer), cmp);
-        char fname[TAM_NOME_MAX];
+        qsort(&buffer, read_number, sizeof(*buffer), cmp);
+        char fname[TAM_NOME_MAX] = {0};
         sprintf(fname, "%s%c %d", PATH_FILES,'A', getQueueNewId(file_queue));
-        FILE* fp = NULL;
-        
-	fp = TRY_OPEN(fname, "w+b");
 
-        fwrite(&buffer, sizeof(*buffer), MAX_INTS, fp);
+        FILE* fp = TRY_OPEN(fname, "w+b");
+
+        fwrite(&buffer, sizeof(*buffer), read_number, fp);
         fclose(fp);
         filePush(file_queue, fname);
+    }
+
+    if (ferror(arquivo_original))
+    {
+        clearerr(arquivo_original);
     }
 
     fclose(arquivo_original);

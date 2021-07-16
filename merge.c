@@ -1,5 +1,7 @@
 #include <assert.h>
+#include <limits.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "config.h"
 #include "merge.h"
@@ -7,7 +9,8 @@
 #include "try.h"
 #include "util.h"
 
-static void merge_files(char *files[], int n_file, char destination[]);
+static void merge_files   (char *files[], int n_file, char destination[]);
+static int  get_smallest_i(int numbers[], int n_number);
 
 void merge_queue(FileQueue *file_queue)
 {
@@ -34,14 +37,52 @@ void merge_queue(FileQueue *file_queue)
 #endif
         }
 
-        //DELETAR ARQUIVOS
-
         filePush(file_queue, fname);
     }
 }
 
-static void merge_files(char *files[], int n_file, char destination[])
+static void merge_files(char *file_names[], int n_file, char destination_name[])
 {
+    int    n_number = n_file;
+    int   *numbers  = malloc(sizeof(*numbers) * n_number);
+    FILE **files    = malloc(sizeof(*files) * n_number);
+
+    for (int file_i = 0; file_i < n_file; file_i++)
+    {
+        files[file_i]   = TRY_OPEN(file_names[file_i], "rb");
+        fread(numbers + file_i, sizeof(*numbers), 1, files[file_i]);
+    }
+    
+    FILE *destination = TRY_OPEN(destination_name, "w+b");
+
+    while(n_number > 0)
+    {
+        int smallest_i = get_smallest_i(numbers, n_number);
+
+        fwrite(numbers + smallest_i, sizeof(*numbers), 1, destination);
+
+        fread(numbers + smallest_i, sizeof(*numbers), 1, files[smallest_i]);
+
+        if (feof(files[smallest_i]))
+        {
+            FILE *file_temp     = files[smallest_i];
+            files[smallest_i]   = files[n_number - 1];
+            files[n_number - 1] = file_temp;
+            numbers[smallest_i] = numbers[n_number - 1];
+
+            n_number--;
+        }
+    }
+
+    for (int file_i = 0; file_i < n_file; file_i++)
+    {
+        fclose(files[file_i]);
+    }
+
+    fclose(destination);
+    free(numbers);
+    free(files);
+#if 0
 	FILE *f1  = TRY_OPEN(files[0], "rb");
 	FILE *f2  = TRY_OPEN(files[1], "rb");
         FILE *aux = TRY_OPEN(destination  , "w+b");
@@ -77,4 +118,20 @@ static void merge_files(char *files[], int n_file, char destination[])
         fclose(f1);
         fclose(f2);
         fclose(aux);
+#endif
+}
+
+static int get_smallest_i(int numbers[], int n_number)
+{
+    int smallest_i = 0;
+
+    for (int number_i = 0; number_i < n_number; number_i++)
+    {
+        if (numbers[number_i] < numbers[smallest_i])
+        {
+            smallest_i = number_i;
+        }
+    }
+
+    return (smallest_i);
 }
