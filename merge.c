@@ -13,12 +13,12 @@ void merge_queue(FileQueue *file_queue)
 {
     while(getQueueSize(file_queue) > 1)
     {
-        char *files[MAX_FILES] = {0};
+        char *files[MAX_FILES_MERGING] = {0};
 
         char fname[TAM_NOME_MAX];
         sprintf(fname, "%s%c %d", PATH_FILES,'I', getQueueNewId(file_queue));
 
-        int file_n = MIN(MAX_FILES, getQueueSize(file_queue));
+        int file_n = MIN(MAX_FILES_MERGING, getQueueSize(file_queue));
 
         for (int file_i = 0; file_i < file_n; file_i++)
         {
@@ -26,6 +26,13 @@ void merge_queue(FileQueue *file_queue)
         }
 
         merge_files(files, file_n, fname);
+
+        for (int file_i = 0; file_i < file_n; file_i++)
+        {
+#if DELETING_FILES
+            remove(files[file_i]);
+#endif
+        }
 
         //DELETAR ARQUIVOS
 
