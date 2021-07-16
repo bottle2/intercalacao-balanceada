@@ -27,6 +27,8 @@ void merge_queue(FileQueue *file_queue)
 
         merge_files(files, file_n, fname);
 
+        //DELETAR ARQUIVOS
+
         filePush(file_queue, fname);
     }
 }
@@ -36,9 +38,6 @@ static void merge_files(char *files[], int n_file, char destination[])
 	FILE *f1  = TRY_OPEN(files[0], "rb");
 	FILE *f2  = TRY_OPEN(files[1], "rb");
         FILE *aux = TRY_OPEN(destination  , "w+b");
-        //while (!(f1 = fopen(f1_name, "rb")));
-        //while (!(f2 = fopen(f2_name, "rb")));
-        //while (!(aux = fopen(fname, "w+b")));
 
         //mergeson
 
@@ -71,5 +70,4 @@ static void merge_files(char *files[], int n_file, char destination[])
         fclose(f1);
         fclose(f2);
         fclose(aux);
-        //DELETAR ARQUIVOS
 }
