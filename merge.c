@@ -12,18 +12,22 @@ void merge_queue(FileQueue *file_queue)
 {
     while(getQueueSize(file_queue) > 1)
     {
-        FILE* f1  = NULL;
-        FILE* f2  = NULL;
-        FILE* aux = NULL; 
-
         char * f1_name = filePop(file_queue);
         char * f2_name = filePop(file_queue);
         char fname[TAM_NOME_MAX];
         sprintf(fname, "%s%c %d", PATH_FILES,'I', getQueueNewId(file_queue));
 
-	f1  = TRY_OPEN(f1_name, "rb");
-	f2  = TRY_OPEN(f2_name, "rb");
-        aux = TRY_OPEN(fname  , "w+b");
+        merge_files((char *[]){f1_name, f2_name}, 2, fname);
+
+        filePush(file_queue, fname);
+    }    
+}
+
+static void merge_files(char **files, int n_file, char destination[])
+{
+	FILE *f1  = TRY_OPEN(files[0], "rb");
+	FILE *f2  = TRY_OPEN(files[1], "rb");
+        FILE *aux = TRY_OPEN(destination  , "w+b");
         //while (!(f1 = fopen(f1_name, "rb")));
         //while (!(f2 = fopen(f2_name, "rb")));
         //while (!(aux = fopen(fname, "w+b")));
@@ -60,6 +64,4 @@ void merge_queue(FileQueue *file_queue)
         fclose(f2);
         fclose(aux);
         //DELETAR ARQUIVOS
-        filePush(file_queue, fname);
-    }    
 }
