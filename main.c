@@ -1,5 +1,4 @@
 #include <assert.h>
-#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -46,7 +45,8 @@ static FileQueue * run_queue(char filename[])
     FILE     *arquivo_original;
     FileQueue *file_queue        = fileCreate();
 
-    while (!(arquivo_original = fopen(filename, "rb")));
+    arquivo_original = TRY_OPEN(filename, "rb");
+    //while (!(arquivo_original = fopen(filename, "rb")));
     int buffer[MAX_INTS] = {0};
 
     while (MAX_INTS == fread(&buffer, sizeof(*buffer), sizeof(buffer) / sizeof(*buffer), arquivo_original) && !feof(arquivo_original))
@@ -60,7 +60,8 @@ static FileQueue * run_queue(char filename[])
         sprintf(fname, "%s%c %d", PATH_FILES,'A', getQueueNewId(file_queue));
         FILE* fp = NULL;
         
-        while (!(fp = fopen(fname, "w+b")));
+	fp = TRY_OPEN(fname, "w+b");
+        //while (!(fp = fopen(fname, "w+b")));
 
         fwrite(&buffer, sizeof(*buffer), MAX_INTS, fp);
         fclose(fp);
@@ -85,9 +86,12 @@ static void merge_sort(FileQueue* queue){
         char fname[TAM_NOME_MAX];
         sprintf(fname, "%s%c %d", PATH_FILES,'I', getQueueNewId(queue));
 
-        while (!(f1 = fopen(f1_name, "rb")));
-        while (!(f2 = fopen(f2_name, "rb")));
-        while (!(aux = fopen(fname, "w+b")));
+	f1  = TRY_OPEN(f1_name, "rb");
+	f2  = TRY_OPEN(f2_name, "rb");
+        aux = TRY_OPEN(fname  , "w+b");
+        //while (!(f1 = fopen(f1_name, "rb")));
+        //while (!(f2 = fopen(f2_name, "rb")));
+        //while (!(aux = fopen(fname, "w+b")));
 
         //mergeson
 

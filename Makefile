@@ -1,20 +1,21 @@
 CC = gcc 
-CFLAGS=-Wpedantic -Wall -Wextra
+CFLAGS=-Wpedantic -Wall -Wextra -O2 -march=native -flto
 all:organizador read write
 
 .SUFFIXES:.c .o
 .c.o:
 	$(CC) $(CFLAGS) $(CDEBUG) -c $<
 
-organizador:main.o queue.o
-	$(CC) $(CFLAGS) $(CDEBUG) $(LDFLAGS) -o organizador main.o queue.o $(LDLIBS)
-main.o:main.c
+organizador:main.o queue.o try.o
+	$(CC) $(CFLAGS) $(CDEBUG) $(LDFLAGS) -o organizador main.o queue.o try.o $(LDLIBS)
+main.o:main.c try.h
 queue.o:queue.c queue.h
+try.o:try.c try.h
 read:read.c
 write:write.c
 
 clean:
-	rm -f main.o queue.o organizador read write
+	rm -f main.o queue.o try.o organizador read write
 	rm -f *teste*
 
 test:
