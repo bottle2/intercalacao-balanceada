@@ -5,25 +5,33 @@
 #include "merge.h"
 #include "queue.h"
 #include "try.h"
+#include "util.h"
 
-static void merge_files(char **files, int n_file, char destination[]);
+static void merge_files(char *files[], int n_file, char destination[]);
 
 void merge_queue(FileQueue *file_queue)
 {
     while(getQueueSize(file_queue) > 1)
     {
-        char * f1_name = filePop(file_queue);
-        char * f2_name = filePop(file_queue);
+        char *files[MAX_FILES] = {0};
+
         char fname[TAM_NOME_MAX];
         sprintf(fname, "%s%c %d", PATH_FILES,'I', getQueueNewId(file_queue));
 
-        merge_files((char *[]){f1_name, f2_name}, 2, fname);
+        int file_n = MIN(MAX_FILES, getQueueSize(file_queue));
+
+        for (int file_i = 0; file_i < file_n; file_i++)
+        {
+            files[file_i] = filePop(file_queue);
+        }
+
+        merge_files(files, file_n, fname);
 
         filePush(file_queue, fname);
-    }    
+    }
 }
 
-static void merge_files(char **files, int n_file, char destination[])
+static void merge_files(char *files[], int n_file, char destination[])
 {
 	FILE *f1  = TRY_OPEN(files[0], "rb");
 	FILE *f2  = TRY_OPEN(files[1], "rb");

@@ -6,12 +6,10 @@
 #include "merge.h"
 #include "queue.h"
 #include "try.h"
+#include "util.h"
 
-#define MAX_INTS 10000
-
-static int         cmp(const void* a, const void* b);
 static FileQueue * run_queue (char filename[]);
-static void        merge_sort(FileQueue* queue);
+//static void        merge_sort(FileQueue* queue);
 
 int main(int argc, char *argv[])
 {
@@ -39,10 +37,6 @@ int main(int argc, char *argv[])
     queueDestroy(file_queue);
 
     return (EXIT_SUCCESS);
-}
-
-static int cmp(const void* a, const void* b){
-    return( *((int*)a) - *((int*)b) );
 }
 
 static FileQueue * run_queue(char filename[])
